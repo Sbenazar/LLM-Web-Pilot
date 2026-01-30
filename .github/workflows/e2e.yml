@@ -1,0 +1,39 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
+    - name: Run E2E Reference Test
+      run: bash examples/test-reference.sh
+    
+    - name: Upload Error Artifacts
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: agent-error-artifacts
+        path: |
+          tmp/agent_error.png
+          tmp/agent_error.html
+        retention-days: 5

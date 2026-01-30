@@ -1,0 +1,11 @@
+# Dependencies
+/node_modules
+
+# Logs
+*.log
+init_ref.log
+init.log
+
+# Agent error artifacts
+agent_error.png
+agent_error.html

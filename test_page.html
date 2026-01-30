@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LLM-Web-Pilot Reference Test</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+          'Open Sans', 'Helvetica Neue', sans-serif;
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 1rem;
+        background-color: #f0f2f5;
+        color: #333;
+      }
+
+      .card {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #2c3e50;
+      }
+
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background-color: #2980b9;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #input-area,
+      #checkbox-area {
+        margin-top: 20px;
+      }
+
+      input[type='text'] {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .success {
+        color: #27ae60;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <h1 id="heading">Reference Test Suite</h1>
+
+      <div id="step-1">
+        <p>Step 1: Test Click & LocalStorage</p>
+        <button id="test-button">Click Me</button>
+        <p id="result"></p>
+      </div>
+
+      <div id="step-2" class="hidden">
+        <p>Step 2: Test Input & Type</p>
+        <div id="input-area">
+          <input type="text" id="test-input" placeholder="Type 'hello' here..." />
+        </div>
+        <p id="input-result"></p>
+      </div>
+
+      <div id="step-3" class="hidden">
+        <p>Step 3: Test Checkbox & Attributes</p>
+        <div id="checkbox-area">
+          <input type="checkbox" id="test-checkbox" data-custom="value-123" />
+          <label for="test-checkbox">Check me</label>
+        </div>
+      </div>
+
+      <div id="step-4" class="hidden">
+        <p>Step 4: Test Cookies</p>
+        <div id="cookie-area">
+          <button id="set-cookie-btn">Set Cookie</button>
+          <button id="get-cookie-btn">Get Cookie Value</button>
+          <button id="clear-cookies-btn">Clear All Cookies</button>
+          <p id="cookie-result"></p>
+        </div>
+      </div>
+
+      <div id="step-5" class="hidden">
+        <p>Step 5: Test Network Requests</p>
+        <div id="network-area">
+          <button id="fetch-data-btn">Fetch Data</button>
+          <button id="mock-request-btn">Mock Request</button>
+          <p id="network-result"></p>
+        </div>
+      </div>
+
+      <div id="step-6" class="hidden">
+        <p>Step 6: Test Performance Metrics</p>
+        <div id="performance-area">
+          <button id="measure-performance-btn">Measure Performance</button>
+          <p id="performance-result"></p>
+        </div>
+      </div>
+
+      <div id="step-7" class="hidden">
+        <p>Step 7: Test Screenshots</p>
+        <div id="screenshot-area">
+          <div
+            id="target-element"
+            style="
+              background-color: #4caf50;
+              color: white;
+              padding: 20px;
+              border-radius: 8px;
+              text-align: center;
+            "
+          >
+            Target Element for Screenshot
+          </div>
+          <br />
+          <button id="take-screenshot-btn">Take Element Screenshot</button>
+          <p id="screenshot-result"></p>
+        </div>
+      </div>
+
+      <div id="step-8" class="hidden">
+        <p>Step 8: Test File Operations</p>
+        <div id="file-area">
+          <input type="file" id="file-upload" />
+          <br /><br />
+          <button id="download-file-btn">Download Sample File</button>
+          <p id="file-result"></p>
+        </div>
+      </div>
+
+      <div id="step-9" class="hidden">
+        <p>Step 9: Test Web Workers</p>
+        <div id="worker-area">
+          <button id="start-worker-btn">Start Web Worker</button>
+          <button id="stop-worker-btn">Stop Web Worker</button>
+          <button id="send-message-btn">Send Message to Worker</button>
+          <p id="worker-result"></p>
+        </div>
+      </div>
+
+      <div id="step-10" class="hidden">
+        <p>Step 10: Test Service Worker</p>
+        <div id="sw-area">
+          <button id="register-sw-btn">Register Service Worker</button>
+          <button id="check-sw-btn">Check Service Worker Status</button>
+          <button id="unregister-sw-btn">Unregister Service Worker</button>
+          <p id="sw-result"></p>
+        </div>
+      </div>
+
+      <div id="step-11" class="hidden">
+        <p>Step 11: Test IndexedDB</p>
+        <div id="indexeddb-area">
+          <button id="create-db-btn">Create Database</button>
+          <button id="add-data-btn">Add Data</button>
+          <button id="get-data-btn">Get Data</button>
+          <button id="delete-db-btn">Delete Database</button>
+          <p id="indexeddb-result"></p>
+        </div>
+      </div>
+
+      <div id="step-12" class="hidden">
+        <p>Step 12: Test Mobile Emulation</p>
+        <div id="mobile-area">
+          <div id="desktop-content" style="display: block">
+            Desktop view content - This should be hidden on mobile
+          </div>
+          <div id="mobile-content" style="display: none">
+            Mobile view content - This should be visible on mobile
+          </div>
+          <button id="check-layout-btn">Check Current Layout</button>
+          <p id="mobile-result"></p>
+        </div>
+      </div>
+
+      <div id="step-13" class="hidden">
+        <p>Step 13: Test Security Headers</p>
+        <div id="security-area">
+          <button id="check-security-btn">Check Security Features</button>
+          <p id="security-result"></p>
+        </div>
+      </div>
+
+      <div id="step-14" class="hidden">
+        <p>Step 14: Test Custom Commands</p>
+        <div id="custom-area">
+          <button id="custom-command-btn">Execute Custom Command</button>
+          <p id="custom-result"></p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const btn = document.getElementById('test-button');
+      const heading = document.getElementById('heading');
+      const result = document.getElementById('result');
+      const step2 = document.getElementById('step-2');
+      const step3 = document.getElementById('step-3');
+      const input = document.getElementById('test-input');
+      const inputResult = document.getElementById('input-result');
+      const checkbox = document.getElementById('test-checkbox');
+
+      // Check if localStorage works
+      if (localStorage.getItem('test_state') === 'clicked') {
+        console.log('Restored state found');
+      }
+
+      btn.addEventListener('click', () => {
+        heading.innerText = 'Button Clicked!';
+        result.innerText = 'Success!';
+        result.className = 'success';
+
+        // Set localStorage to verify later
+        localStorage.setItem('test_state', 'clicked');
+
+        // Show steps after delay
+        setTimeout(() => {
+          step2.classList.remove('hidden');
+          step3.classList.remove('hidden');
+        }, 500);
+      });
+
+      input.addEventListener('input', (e) => {
+        if (e.target.value === 'hello') {
+          inputResult.innerText = 'Input Matched!';
+          inputResult.className = 'success';
+        }
+      });
+
+      // Cookie functionality
+      const setCookieBtn = document.getElementById('set-cookie-btn');
+      const getCookieBtn = document.getElementById('get-cookie-btn');
+      const clearCookiesBtn = document.getElementById('clear-cookies-btn');
+      const cookieResult = document.getElementById('cookie-result');
+      const step4 = document.getElementById('step-4');
+
+      // Show step 4 when step 2 is visible
+      if (!step2.classList.contains('hidden')) {
+        step4.classList.remove('hidden');
+      }
+
+      // Helper functions for cookie manipulation
+      function setCookie(name, value, days) {
+        let expires = '';
+        if (days) {
+          const date = new Date();
+          date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+          expires = '; expires=' + date.toUTCString();
+        }
+        document.cookie = name + '=' + (value || '') + expires + '; path=/';
+      }
+
+      function getCookie(name) {
+        const nameEQ = name + '=';
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      }
+
+      function eraseCookie(name) {
+        document.cookie = name + '=; Max-Age=-99999999;';
+      }
+
+      function clearAllCookies() {
+        document.cookie.split(';').forEach(function (c) {
+          document.cookie = c
+            .replace(/^ +/, '')
+            .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+        });
+      }
+
+      setCookieBtn.addEventListener('click', () => {
+        setCookie('test_cookie', 'cookie_value_123', 7); // Expires in 7 days
+        cookieResult.innerText = 'Cookie set!';
+        cookieResult.className = 'success';
+      });
+
+      getCookieBtn.addEventListener('click', () => {
+        const cookieValue = getCookie('test_cookie');
+        if (cookieValue) {
+          cookieResult.innerText = 'Cookie value: ' + cookieValue;
+          cookieResult.className = 'success';
+        } else {
+          cookieResult.innerText = 'Cookie not found';
+          cookieResult.className = '';
+        }
+      });
+
+      clearCookiesBtn.addEventListener('click', () => {
+        clearAllCookies();
+        cookieResult.innerText = 'All cookies cleared!';
+        cookieResult.className = 'success';
+      });
+
+      // Network request functionality
+      const fetchDataBtn = document.getElementById('fetch-data-btn');
+      const mockRequestBtn = document.getElementById('mock-request-btn');
+      const networkResult = document.getElementById('network-result');
+      const step5 = document.getElementById('step-5');
+
+      // Show step 5 when step 4 is visible
+      if (!step4.classList.contains('hidden')) {
+        step5.classList.remove('hidden');
+      }
+
+      fetchDataBtn.addEventListener('click', async () => {
+        try {
+          // Making a request to a test endpoint
+          const response = await fetch('https://httpbin.org/get?test=data');
+          const data = await response.json();
+
+          networkResult.innerHTML = `Fetched data: ${JSON.stringify(data.args)}`;
+          networkResult.className = 'success';
+        } catch (error) {
+          networkResult.innerHTML = `Error: ${error.message}`;
+          networkResult.className = '';
+        }
+      });
+
+      mockRequestBtn.addEventListener('click', () => {
+        // This button is for testing request mocking
+        networkResult.innerHTML = 'Ready for request mocking test';
+        networkResult.className = 'success';
+      });
+
+      // Performance measurement functionality
+      const measurePerformanceBtn = document.getElementById('measure-performance-btn');
+      const performanceResult = document.getElementById('performance-result');
+      const step6 = document.getElementById('step-6');
+
+      // Show step 6 when step 5 is visible
+      if (!step5.classList.contains('hidden')) {
+        step6.classList.remove('hidden');
+      }
+
+      measurePerformanceBtn.addEventListener('click', () => {
+        // Collect performance metrics
+        const perfData = {};
+
+        // Navigation timing
+        if (performance.timing) {
+          const timing = performance.timing;
+          perfData.navigation = {
+            dnsLookup: timing.domainLookupEnd - timing.domainLookupStart,
+            connect: timing.connectEnd - timing.connectStart,
+            request: timing.responseEnd - timing.requestStart,
+            load: timing.loadEventEnd - timing.loadEventStart,
+            domReady: timing.domContentLoadedEventEnd - timing.navigationStart,
+          };
+        }
+
+        // Navigation Vitals (Core Web Vitals)
+        if ('performance' in window) {
+          // Measure paint timing
+          const observer = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              if (entry.name === 'first-paint') {
+                perfData.firstPaint = entry.startTime;
+              } else if (entry.name === 'first-contentful-paint') {
+                perfData.firstContentfulPaint = entry.startTime;
+              }
+            }
+          });
+          observer.observe({ entryTypes: ['paint'] });
+
+          // Measure largest contentful paint
+          const lcpObserver = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              perfData.largestContentfulPaint = entry.startTime;
+            }
+          });
+          lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+        }
+
+        performanceResult.innerHTML = `Performance measured: Paint timing initiated`;
+        performanceResult.className = 'success';
+
+        // Store performance data in a global variable for access by agent
+        window.performanceMetrics = perfData;
+      });
+
+      // Screenshot functionality
+      const takeScreenshotBtn = document.getElementById('take-screenshot-btn');
+      const screenshotResult = document.getElementById('screenshot-result');
+      const step7 = document.getElementById('step-7');
+
+      // Show step 7 when step 6 is visible
+      if (!step6.classList.contains('hidden')) {
+        step7.classList.remove('hidden');
+      }
+
+      takeScreenshotBtn.addEventListener('click', () => {
+        screenshotResult.innerHTML = 'Ready for element screenshot test';
+        screenshotResult.className = 'success';
+      });
+
+      // File operations functionality
+      const fileUpload = document.getElementById('file-upload');
+      const downloadFileBtn = document.getElementById('download-file-btn');
+      const fileResult = document.getElementById('file-result');
+      const step8 = document.getElementById('step-8');
+
+      // Show step 8 when step 7 is visible
+      if (!step7.classList.contains('hidden')) {
+        step8.classList.remove('hidden');
+      }
+
+      fileUpload.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          fileResult.innerHTML = `File selected: ${file.name} (${file.size} bytes)`;
+          fileResult.className = 'success';
+        }
+      });
+
+      downloadFileBtn.addEventListener('click', () => {
+        // Create a sample file for download
+        const content =
+          'Sample financial data\nDate,Description,Amount\n2023-01-01,Groceries,-50.00\n2023-01-02,Salary,2000.00';
+        const blob = new Blob([content], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'sample_financial_data.csv';
+        document.body.appendChild(a);
+        a.click();
+
+        // Clean up
+        setTimeout(() => {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        }, 100);
+
+        fileResult.innerHTML = 'Download initiated: sample_financial_data.csv';
+        fileResult.className = 'success';
+      });
+
+      // Web Workers functionality
+      const startWorkerBtn = document.getElementById('start-worker-btn');
+      const stopWorkerBtn = document.getElementById('stop-worker-btn');
+      const sendMessageBtn = document.getElementById('send-message-btn');
+      const workerResult = document.getElementById('worker-result');
+      const step9 = document.getElementById('step-9');
+
+      let worker = null;
+
+      // Show step 9 when step 8 is visible
+      if (!step8.classList.contains('hidden')) {
+        step9.classList.remove('hidden');
+      }
+
+      // Define the worker code as a string
+      const workerCode = `
+        // Simple worker that responds to messages
+        self.onmessage = function(e) {
+          const data = e.data;
+          if (data.command === 'start') {
+            self.postMessage({status: 'started', message: 'Worker started'});
+          } else if (data.command === 'stop') {
+            self.postMessage({status: 'stopped', message: 'Worker stopped'});
+          } else if (data.command === 'calculate') {
+            // Simulate some calculation
+            const result = data.value * 2;
+            self.postMessage({status: 'calculated', result: result});
+          } else {
+            self.postMessage({status: 'received', message: 'Received: ' + JSON.stringify(data)});
+          }
+        };
+      `;
+
+      // Create a blob from the worker code
+      const blob = new Blob([workerCode], { type: 'application/javascript' });
+      const workerUrl = URL.createObjectURL(blob);
+
+      startWorkerBtn.addEventListener('click', () => {
+        if (!worker) {
+          worker = new Worker(workerUrl);
+          worker.onmessage = function (e) {
+            workerResult.innerHTML = 'Worker message: ' + JSON.stringify(e.data);
+            workerResult.className = 'success';
+          };
+          worker.postMessage({ command: 'start' });
+        } else {
+          workerResult.innerHTML = 'Worker is already running';
+          workerResult.className = 'success';
+        }
+      });
+
+      stopWorkerBtn.addEventListener('click', () => {
+        if (worker) {
+          worker.postMessage({ command: 'stop' });
+          worker.terminate();
+          worker = null;
+          workerResult.innerHTML = 'Worker terminated';
+          workerResult.className = 'success';
+        } else {
+          workerResult.innerHTML = 'No worker to stop';
+          workerResult.className = '';
+        }
+      });
+
+      sendMessageBtn.addEventListener('click', () => {
+        if (worker) {
+          worker.postMessage({ command: 'calculate', value: 21 });
+          workerResult.innerHTML = 'Message sent to worker';
+          workerResult.className = 'success';
+        } else {
+          workerResult.innerHTML = 'No worker to send message to';
+          workerResult.className = '';
+        }
+      });
+
+      // Service Worker functionality
+      const registerSwBtn = document.getElementById('register-sw-btn');
+      const checkSwBtn = document.getElementById('check-sw-btn');
+      const unregisterSwBtn = document.getElementById('unregister-sw-btn');
+      const swResult = document.getElementById('sw-result');
+      const step10 = document.getElementById('step-10');
+
+      // Show step 10 when step 9 is visible
+      if (!step9.classList.contains('hidden')) {
+        step10.classList.remove('hidden');
+      }
+
+      // Define the service worker code as a string
+      const swCode = `
+        // Simple service worker
+        self.addEventListener('install', event => {
+          console.log('Service Worker: Installing');
+          self.skipWaiting(); // Activate worker immediately
+        });
+
+        self.addEventListener('activate', event => {
+          console.log('Service Worker: Activating');
+          event.waitUntil(clients.claim()); // Claim clients immediately
+        });
+
+        self.addEventListener('fetch', event => {
+          console.log('Service Worker: Fetching', event.request.url);
+          // For this demo, just pass through all requests
+          event.respondWith(fetch(event.request));
+        });
+
+        self.addEventListener('message', event => {
+          console.log('Service Worker: Received message', event.data);
+          // Echo back the message with a prefix
+          event.source.postMessage({
+            type: 'echo',
+            originalMessage: event.data
+          });
+        });
+      `;
+
+      // Create a blob from the service worker code
+      const swBlob = new Blob([swCode], { type: 'application/javascript' });
+      const swUrl = URL.createObjectURL(swBlob);
+
+      registerSwBtn.addEventListener('click', async () => {
+        try {
+          if ('serviceWorker' in navigator) {
+            const registration = await navigator.serviceWorker.register(swUrl);
+            swResult.innerHTML = `Service Worker registered with scope: ${registration.scope}`;
+            swResult.className = 'success';
+          } else {
+            swResult.innerHTML = 'Service Worker not supported in this browser';
+            swResult.className = '';
+          }
+        } catch (error) {
+          swResult.innerHTML = `Service Worker registration failed: ${error}`;
+          swResult.className = '';
+        }
+      });
+
+      checkSwBtn.addEventListener('click', async () => {
+        try {
+          if ('serviceWorker' in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            if (registrations.length > 0) {
+              const registration = registrations[0];
+              const state = registration.active ? registration.active.state : 'no active worker';
+              swResult.innerHTML = `Service Worker registered. State: ${state}. Scope: ${registration.scope}`;
+              swResult.className = 'success';
+            } else {
+              swResult.innerHTML = 'No Service Worker registered';
+              swResult.className = '';
+            }
+          } else {
+            swResult.innerHTML = 'Service Worker not supported in this browser';
+            swResult.className = '';
+          }
+        } catch (error) {
+          swResult.innerHTML = `Error checking Service Worker: ${error}`;
+          swResult.className = '';
+        }
+      });
+
+      unregisterSwBtn.addEventListener('click', async () => {
+        try {
+          if ('serviceWorker' in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (const registration of registrations) {
+              await registration.unregister();
+            }
+            swResult.innerHTML = 'Service Worker unregistered';
+            swResult.className = 'success';
+          } else {
+            swResult.innerHTML = 'Service Worker not supported in this browser';
+            swResult.className = '';
+          }
+        } catch (error) {
+          swResult.innerHTML = `Service Worker unregistration failed: ${error}`;
+          swResult.className = '';
+        }
+      });
+
+      // IndexedDB functionality
+      const createDbBtn = document.getElementById('create-db-btn');
+      const addDataBtn = document.getElementById('add-data-btn');
+      const getDataBtn = document.getElementById('get-data-btn');
+      const deleteDbBtn = document.getElementById('delete-db-btn');
+      const indexeddbResult = document.getElementById('indexeddb-result');
+      const step11 = document.getElementById('step-11');
+
+      // Show step 11 when step 10 is visible
+      if (!step10.classList.contains('hidden')) {
+        step11.classList.remove('hidden');
+      }
+
+      // Database name and version
+      const dbName = 'FinancialDB';
+      const dbVersion = 1;
+      let db;
+
+      createDbBtn.addEventListener('click', () => {
+        if (!window.indexedDB) {
+          indexeddbResult.innerHTML = 'IndexedDB not supported in this browser';
+          indexeddbResult.className = '';
+          return;
+        }
+
+        const request = indexedDB.open(dbName, dbVersion);
+
+        request.onerror = (event) => {
+          indexeddbResult.innerHTML = 'Database error: ' + event.target.error;
+          indexeddbResult.className = '';
+        };
+
+        request.onsuccess = (event) => {
+          db = event.target.result;
+          indexeddbResult.innerHTML = 'Database opened successfully';
+          indexeddbResult.className = 'success';
+        };
+
+        request.onupgradeneeded = (event) => {
+          db = event.target.result;
+
+          // Create an object store for financial records
+          if (!db.objectStoreNames.contains('transactions')) {
+            const objectStore = db.createObjectStore('transactions', {
+              keyPath: 'id',
+              autoIncrement: true,
+            });
+            objectStore.createIndex('date', 'date', { unique: false });
+            objectStore.createIndex('amount', 'amount', { unique: false });
+            indexeddbResult.innerHTML = 'Object store created';
+          }
+        };
+      });
+
+      addDataBtn.addEventListener('click', () => {
+        if (!db) {
+          indexeddbResult.innerHTML = 'Please create/open database first';
+          indexeddbResult.className = '';
+          return;
+        }
+
+        const transaction = db.transaction(['transactions'], 'readwrite');
+        const objectStore = transaction.objectStore('transactions');
+
+        const record = {
+          date: new Date().toISOString(),
+          description: 'Test transaction',
+          amount: -50.0,
+          category: 'Groceries',
+        };
+
+        const request = objectStore.add(record);
+
+        request.onsuccess = () => {
+          indexeddbResult.innerHTML = `Record added with ID: ${request.result}`;
+          indexeddbResult.className = 'success';
+        };
+
+        request.onerror = (event) => {
+          indexeddbResult.innerHTML = 'Error adding record: ' + event.target.error;
+          indexeddbResult.className = '';
+        };
+      });
+
+      getDataBtn.addEventListener('click', () => {
+        if (!db) {
+          indexeddbResult.innerHTML = 'Please create/open database first';
+          indexeddbResult.className = '';
+          return;
+        }
+
+        const transaction = db.transaction(['transactions'], 'readonly');
+        const objectStore = transaction.objectStore('transactions');
+
+        const getAllRequest = objectStore.getAll();
+
+        getAllRequest.onsuccess = () => {
+          const records = getAllRequest.result;
+          indexeddbResult.innerHTML = `Retrieved ${records.length} records: ${JSON.stringify(records)}`;
+          indexeddbResult.className = 'success';
+        };
+
+        getAllRequest.onerror = (event) => {
+          indexeddbResult.innerHTML = 'Error getting records: ' + event.target.error;
+          indexeddbResult.className = '';
+        };
+      });
+
+      deleteDbBtn.addEventListener('click', () => {
+        if (!db) {
+          indexeddbResult.innerHTML = 'No database to delete';
+          indexeddbResult.className = '';
+          return;
+        }
+
+        db.close();
+        const deleteReq = indexedDB.deleteDatabase(dbName);
+
+        deleteReq.onsuccess = () => {
+          indexeddbResult.innerHTML = 'Database deleted successfully';
+          indexeddbResult.className = 'success';
+          db = null;
+        };
+
+        deleteReq.onerror = (event) => {
+          indexeddbResult.innerHTML = 'Error deleting database: ' + event.target.error;
+          indexeddbResult.className = '';
+        };
+      });
+
+      // Mobile emulation functionality
+      const checkLayoutBtn = document.getElementById('check-layout-btn');
+      const mobileResult = document.getElementById('mobile-result');
+      const desktopContent = document.getElementById('desktop-content');
+      const mobileContent = document.getElementById('mobile-content');
+      const step12 = document.getElementById('step-12');
+
+      // Show step 12 when step 11 is visible
+      if (!step11.classList.contains('hidden')) {
+        step12.classList.remove('hidden');
+      }
+
+      // Function to detect if we're in a mobile layout
+      function isMobileLayout() {
+        // Check if viewport width is less than a threshold (e.g., 768px)
+        return window.innerWidth <= 768;
+      }
+
+      checkLayoutBtn.addEventListener('click', () => {
+        const mobile = isMobileLayout();
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // Toggle content based on layout
+        if (mobile) {
+          desktopContent.style.display = 'none';
+          mobileContent.style.display = 'block';
+        } else {
+          desktopContent.style.display = 'block';
+          mobileContent.style.display = 'none';
+        }
+
+        mobileResult.innerHTML = `Layout: ${mobile ? 'Mobile' : 'Desktop'} | Size: ${width}x${height}`;
+        mobileResult.className = 'success';
+      });
+
+      // Security functionality
+      const checkSecurityBtn = document.getElementById('check-security-btn');
+      const securityResult = document.getElementById('security-result');
+      const step13 = document.getElementById('step-13');
+
+      // Show step 13 when step 12 is visible
+      if (!step12.classList.contains('hidden')) {
+        step13.classList.remove('hidden');
+      }
+
+      checkSecurityBtn.addEventListener('click', () => {
+        // Check various security-related features
+        const securityFeatures = {
+          https: window.location.protocol === 'https:',
+          secureContext: window.isSecureContext,
+          referrerPolicy: document.referrerPolicy,
+          contentSecurityPolicy: !!document.querySelector(
+            'meta[http-equiv="Content-Security-Policy"]'
+          ),
+          permissionsPolicy: !!document.querySelector('meta[http-equiv="Permissions-Policy"]'),
+          strictTransportSecurity: document.createElement('a').href.startsWith('https://'),
+          // Note: Actual HSTS header can't be checked from client-side JS
+        };
+
+        // Check for mixed content
+        const mixedContent = [];
+        const images = document.getElementsByTagName('img');
+        for (let img of images) {
+          if (img.src.startsWith('http://')) {
+            mixedContent.push({ type: 'image', src: img.src });
+          }
+        }
+
+        // Check for iframe sandboxing
+        const iframes = document.getElementsByTagName('iframe');
+        const iframeSecurity = [];
+        for (let iframe of iframes) {
+          iframeSecurity.push({
+            src: iframe.src,
+            sandboxed: iframe.hasAttribute('sandbox'),
+          });
+        }
+
+        securityResult.innerHTML = `Security features: ${JSON.stringify(securityFeatures, null, 2)}
+Mixed content: ${mixedContent.length > 0 ? JSON.stringify(mixedContent) : 'None'}
+Iframe security: ${JSON.stringify(iframeSecurity, null, 2)}`;
+        securityResult.className = 'success';
+      });
+
+      // Custom commands functionality
+      const customCommandBtn = document.getElementById('custom-command-btn');
+      const customResult = document.getElementById('custom-result');
+      const step14 = document.getElementById('step-14');
+
+      // Show step 14 when step 13 is visible
+      if (!step13.classList.contains('hidden')) {
+        step14.classList.remove('hidden');
+      }
+
+      // Define a global object to hold custom functions
+      window.customCommands = {
+        // Example custom command to calculate financial metrics
+        calculateNetWorth: (assets, liabilities) => {
+          return assets - liabilities;
+        },
+
+        // Example custom command to format currency
+        formatCurrency: (amount, currency = 'USD') => {
+          return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: currency,
+          }).format(amount);
+        },
+
+        // Example custom command to validate form inputs
+        validateEmail: (email) => {
+          const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return re.test(email);
+        },
+
+        // Example custom command to get page statistics
+        getPageStats: () => {
+          return {
+            title: document.title,
+            url: window.location.href,
+            timestamp: new Date().toISOString(),
+            elementCount: document.querySelectorAll('*').length,
+            imageCount: document.querySelectorAll('img').length,
+            linkCount: document.querySelectorAll('a').length,
+          };
+        },
+      };
+
+      customCommandBtn.addEventListener('click', () => {
+        // Example of using custom commands
+        const stats = window.customCommands.getPageStats();
+        const formattedAssets = window.customCommands.formatCurrency(50000);
+        const isValidEmail = window.customCommands.validateEmail('test@example.com');
+
+        customResult.innerHTML = `Page stats: ${JSON.stringify(stats, null, 2)}
+Assets (formatted): ${formattedAssets}
+Email validation: ${isValidEmail}`;
+        customResult.className = 'success';
+      });
+    </script>
+  </body>
+</html>

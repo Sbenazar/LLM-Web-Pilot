@@ -1,0 +1,33 @@
+{
+  "name": "llm-web-pilot",
+  "version": "1.0.0",
+  "description": "A CLI-based browser automation agent designed for seamless LLM and human collaboration in the browser.",
+  "main": "web-pilot.js",
+  "scripts": {
+    "start": "node init_browser.js",
+    "test": "bash examples/test-reference.sh"
+  },
+  "keywords": [
+    "llm",
+    "browser-automation",
+    "playwright",
+    "ai-agent",
+    "testing",
+    "web-pilot",
+    "cli",
+    "e2e"
+  ],
+  "author": "Sbenazar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sbenazar/LLM-Web-Pilot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sbenazar/LLM-Web-Pilot/issues"
+  },
+  "homepage": "https://github.com/Sbenazar/LLM-Web-Pilot#readme",
+  "dependencies": {
+    "playwright": "^1.57.0"
+  }
+}
