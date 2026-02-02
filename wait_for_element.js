@@ -10,8 +10,8 @@ async (selector, options = {}) => {
 
     const checkElement = setInterval(() => {
       const elements = Array.from(document.querySelectorAll(selector));
-      const element = elements.find(el =>
-        !el.disabled && (options.checkEnabled ? !el.disabled : true)
+      const element = elements.find(
+        (el) => !el.disabled && (options.checkEnabled ? !el.disabled : true)
       );
 
       if (element) {
@@ -20,7 +20,7 @@ async (selector, options = {}) => {
           status: 'success',
           found: true,
           waited: Date.now() - startTime,
-          element: element.tagName
+          element: element.tagName,
         });
       }
 
@@ -30,7 +30,7 @@ async (selector, options = {}) => {
           status: 'timeout',
           found: false,
           waited: Date.now() - startTime,
-          element: null
+          element: null,
         });
       }
     }, checkInterval);

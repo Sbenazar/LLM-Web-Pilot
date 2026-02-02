@@ -5,15 +5,18 @@ First off, thank you for considering contributing to LLM-Web-Pilot! It's people 
 ## How Can I Contribute?
 
 ### Reporting Bugs
+
 - Check the [Issues tab](https://github.com/Sbenazar/LLM-Web-Pilot/issues) to see if the bug has already been reported.
 - If not, create a new issue. Include as much detail as possible: steps to reproduce, expected behavior, and actual behavior.
 - Attach any diagnostic artifacts (`agent_error.png`, `agent_error.html`) if applicable.
 
 ### Suggesting Enhancements
+
 - Open an issue with the tag "enhancement".
 - Describe the feature you'd like to see and why it would be useful.
 
 ### Pull Requests
+
 1. Fork the repository.
 2. Create a new branch for your feature or fix.
 3. Write your code and ensure it follows the project style.

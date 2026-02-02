@@ -26,7 +26,6 @@ const mobile = require('./mobile');
 const security = require('./security');
 const custom = require('./custom');
 
-
 module.exports = {
   goto,
   click,

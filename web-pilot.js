@@ -52,15 +52,18 @@ async function runAgent(commandString) {
       if (commands[cmd]) {
         const commandFn = commands[cmd];
         // Some commands have a different signature or require additional context
-        if (['close'].includes(cmd)) { // 'close' needs sessionData and SESSION_FILE
-            result = await commandFn(page, args, { sessionData, SESSION_FILE });
-        } else if (['evaluate', 'route', 'custom'].includes(cmd)) { // 'evaluate', 'route', 'custom' need the full command string
-            result = await commandFn(page, args, context, command);
-        } else if (['setOffline', 'cookies'].includes(cmd)) { // 'setOffline', 'cookies' need the context object
-            result = await commandFn(page, args, context);
-        }
-        else { // Default for most commands
-            result = await commandFn(page, args);
+        if (['close'].includes(cmd)) {
+          // 'close' needs sessionData and SESSION_FILE
+          result = await commandFn(page, args, { sessionData, SESSION_FILE });
+        } else if (['evaluate', 'route', 'custom'].includes(cmd)) {
+          // 'evaluate', 'route', 'custom' need the full command string
+          result = await commandFn(page, args, context, command);
+        } else if (['setOffline', 'cookies'].includes(cmd)) {
+          // 'setOffline', 'cookies' need the context object
+          result = await commandFn(page, args, context);
+        } else {
+          // Default for most commands
+          result = await commandFn(page, args);
         }
       } else {
         result = { status: 'error', message: `Unknown command: ${cmd}` };

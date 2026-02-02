@@ -87,8 +87,7 @@ async function fileCmd(page, args) {
   } else {
     return {
       status: 'error',
-      message:
-        'Invalid file operation. Use: file upload <selector> <path> or file download <path>',
+      message: 'Invalid file operation. Use: file upload <selector> <path> or file download <path>',
     };
   }
 }

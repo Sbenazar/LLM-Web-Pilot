@@ -15,12 +15,14 @@ LLM-Web-Pilot is a browser automation tool specifically designed for efficient i
 ## Installation
 
 1. Ensure you have Node.js and npm installed:
+
    ```bash
    node --version
    npm --version
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
@@ -60,41 +62,49 @@ A quick check to verify all core agent functions.
 The agent accepts a chain of commands separated by `;`. It returns an array of results for each step.
 
 ### Navigation & Interaction
+
 - **goto** `url` – Navigates to a URL (waits for `domcontentloaded`).
 - **click** `selector` – Clicks on an element.
 - **type** `selector text` – Inputs text into a field.
 - **waitElement** `selector` – Waits for element visibility (10s timeout).
 
 ### Data Retrieval
+
 - **text** `selector` – Gets `innerText` (defaults to `body`).
 - **getAttribute** `selector attr` – Gets the value of a specific element attribute.
 - **isChecked** `selector` – Checks the state of a Checkbox/Radio button.
 
 ### Storage
+
 - **localStorage** `clear` | `set k v` | `key` – Interact with Local Storage.
 - **sessionStorage** `clear` | `set k v` | `key` – Interact with Session Storage.
 
 ### Network & Security
+
 - **cookies** `clear` | `set name value` | `name` | `-` – Manage cookies (clear, set, get, or get all).
 - **route** `intercept pattern response` | `continue pattern` – Intercept and mock network requests.
 - **setOffline** `true/false` – Emulate network status.
 - **security** `headers` | `mixedContent` | `report` – Security checks (headers, mixed content, full report).
 
 ### Performance & Media
+
 - **performance** `metrics` | `timing` – Retrieve performance metrics (Core Web Vitals, Navigation Timing).
 - **screenshot** `path` | `element selector path` | `fullpage path` – Take a manual, element-specific, or full-page screenshot.
 
 ### Files & Devices
+
 - **file** `upload selector path` | `download path` – Upload/Download files.
 - **mobile** `emulate device` | `setViewport width height` | `getUserAgent` – Mobile emulation (viewport, User Agent).
 
 ### Advanced APIs
+
 - **worker** `start [name]` | `postMessage name message` | `terminate name` – Web Workers management.
 - **serviceworker** `register path` | `status` | `unregister` – Service Worker management.
 - **indexeddb** `create name [version]` | `add dbname storename data` | `get dbname storename [key]` | `delete name` – IndexedDB management.
 - **waitServiceWorker** – Wait for Service Worker activation.
 
 ### Customization & Shutdown
+
 - **custom** `run command [params]` | `define name code` – Define and run custom commands/plugins.
 - **close** – Shuts down the browser server.
 

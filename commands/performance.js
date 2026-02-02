@@ -68,8 +68,7 @@ async function performance(page, args) {
   } else {
     return {
       status: 'error',
-      message:
-        'Invalid performance operation. Use: performance metrics or performance timing',
+      message: 'Invalid performance operation. Use: performance metrics or performance timing',
     };
   }
 }

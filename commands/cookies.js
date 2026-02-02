@@ -5,8 +5,7 @@ async function cookies(page, args, context) {
   } else if (args[0] === 'set') {
     const currentUrl = new URL(page.url());
     const domain = currentUrl.hostname || 'localhost';
-    const path =
-      currentUrl.pathname.substring(0, currentUrl.pathname.lastIndexOf('/') + 1) || '/';
+    const path = currentUrl.pathname.substring(0, currentUrl.pathname.lastIndexOf('/') + 1) || '/';
 
     await context.addCookies([
       {

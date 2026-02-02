@@ -5,9 +5,7 @@ async function security(page, args) {
         const features = {
           isSecureContext: window.isSecureContext,
           protocol: window.location.protocol,
-          hasStrictTransportSecurity: document
-            .createElement('a')
-            .href.startsWith('https://'),
+          hasStrictTransportSecurity: document.createElement('a').href.startsWith('https://'),
           hasContentSecurityPolicy: !!document.querySelector(
             'meta[http-equiv="Content-Security-Policy"], meta[name="Content-Security-Policy"]'
           ),
