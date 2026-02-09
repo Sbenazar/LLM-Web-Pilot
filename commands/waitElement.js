@@ -3,7 +3,7 @@ async function waitElement(page, args) {
   try {
     await page.waitForSelector(elementSelector, {
       state: 'visible',
-      timeout: 10000,
+      timeout: 30000,
     });
     return {
       status: 'success',
