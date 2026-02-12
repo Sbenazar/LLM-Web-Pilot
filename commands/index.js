@@ -25,6 +25,8 @@ const indexeddb = require('./indexeddb');
 const mobile = require('./mobile');
 const security = require('./security');
 const custom = require('./custom');
+const saveState = require('./saveState');
+const restoreState = require('./restoreState');
 
 module.exports = {
   goto,
@@ -54,4 +56,6 @@ module.exports = {
   mobile,
   security,
   custom,
+  saveState,
+  restoreState,
 };

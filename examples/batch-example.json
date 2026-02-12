@@ -1,0 +1,38 @@
+{
+  "setup": "goto file://__TEST_PAGE__",
+  "teardown": "goto about:blank",
+  "tests": [
+    {
+      "name": "click-button-and-check-text",
+      "commands": "waitElement #test-button; click #test-button; text #result",
+      "expect": {
+        "results": [
+          { "status": "success" },
+          { "status": "success" },
+          { "status": "success", "data": "Success!" }
+        ]
+      }
+    },
+    {
+      "name": "check-heading-after-click",
+      "commands": "waitElement #test-button; click #test-button; text #heading",
+      "expect": {
+        "results": [
+          { "status": "success" },
+          { "status": "success" },
+          { "status": "success", "data": "Button Clicked!" }
+        ]
+      }
+    },
+    {
+      "name": "localstorage-set-and-get",
+      "commands": "localStorage set batchKey batchValue; localStorage batchKey",
+      "expect": {
+        "results": [
+          { "status": "success", "action": "localStorage", "operation": "set" },
+          { "status": "success", "action": "localStorage", "value": "batchValue" }
+        ]
+      }
+    }
+  ]
+}

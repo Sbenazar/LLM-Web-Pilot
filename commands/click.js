@@ -1,4 +1,7 @@
 async function click(page, args) {
+  if (!args[0]) {
+    return { status: 'error', action: 'click', message: 'Usage: click <selector>' };
+  }
   let result;
   try {
     // We don't have the context of other commands here, so we simplify the logic

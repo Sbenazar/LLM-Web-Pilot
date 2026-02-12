@@ -9,3 +9,13 @@ init.log
 # Agent error artifacts
 agent_error.png
 agent_error.html
+
+# Session and state files
+session.json
+states/
+tmp/
+
+# System and editor files
+.DS_Store
+*.swp
+*.swo

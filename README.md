@@ -29,7 +29,7 @@ LLM-Web-Pilot is a browser automation tool specifically designed for efficient i
 
 3. Install Playwright browser binaries:
    ```bash
-   npx playwright install
+   npx playwright install --with-deps
    ```
 
 ---
@@ -103,6 +103,10 @@ The agent accepts a chain of commands separated by `;`. It returns an array of r
 - **indexeddb** `create name [version]` | `add dbname storename data` | `get dbname storename [key]` | `delete name` – IndexedDB management.
 - **waitServiceWorker** – Wait for Service Worker activation.
 
+### State Management
+- **saveState** `name` – Saves browser state (cookies, localStorage, URL) to `states/<name>.json`.
+- **restoreState** `name` – Restores browser state from `states/<name>.json` (creates a new context, navigates to saved URL).
+
 ### Customization & Shutdown
 
 - **custom** `run command [params]` | `define name code` – Define and run custom commands/plugins.
@@ -136,3 +140,69 @@ The agent always outputs results in a unified JSON format, optimized for LLM pro
 ```
 
 If `pageErrors` contains entries, it indicates that browser console exceptions occurred during execution. This allows LLMs to analyze the execution environment and adjust their actions accordingly.
+
+---
+
+## Batch Test Runner
+
+For running multiple tests from a JSON file with shared setup/teardown:
+
+```bash
+node batch-runner.js tests/my-tests.json
+```
+
+### Test File Format
+
+```json
+{
+  "setup": "restoreState authenticated",
+  "teardown": "goto about:blank",
+  "tests": [
+    {
+      "name": "my-test-case",
+      "commands": "goto /page; click #btn; text #result",
+      "expect": {
+        "results": [
+          { "status": "success" },
+          { "status": "success" },
+          { "status": "success", "data": "Expected text" }
+        ]
+      }
+    }
+  ]
+}
+```
+
+- **setup** – Command chain executed before each test (optional).
+- **teardown** – Command chain executed after each test (optional).
+- **expect** – Partial match: only the specified fields are compared. Omitted fields are ignored.
+
+### Report Format
+
+```json
+{
+  "total": 50,
+  "passed": 48,
+  "failed": 2,
+  "results": [
+    { "name": "test-name", "status": "passed" },
+    { "name": "test-name", "status": "failed", "expected": {}, "actual": {} }
+  ]
+}
+```
+
+---
+
+## State Management (saveState / restoreState)
+
+Save and restore browser state (cookies, localStorage, URL) to avoid repeating authentication flows:
+
+```bash
+# After completing login flow, save the state
+node web-pilot.js "goto https://app.example.com; type #user admin; type #pass secret; click #login; saveState authenticated"
+
+# In subsequent test runs, restore instead of re-authenticating
+node web-pilot.js "restoreState authenticated; click #dashboard; text #welcome"
+```
+
+State files are stored in the `states/` directory as JSON.

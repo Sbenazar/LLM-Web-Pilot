@@ -30,11 +30,12 @@ async function runAgent(commandString) {
   const sessionData = JSON.parse(fs.readFileSync(SESSION_FILE, 'utf8'));
   let browser;
   try {
-    browser = await chromium.connect(sessionData.wsEndpoint);
+    browser = await chromium.connect(sessionData.wsEndpoint, { timeout: 10000 });
     const context = browser.contexts()[0] || (await browser.newContext());
 
     const pages = context.pages();
-    const page = pages.length > 0 ? pages[0] : await context.newPage();
+    let currentContext = context;
+    let page = pages.length > 0 ? pages[0] : await context.newPage();
     await page.bringToFront();
 
     const pageErrors = [];
@@ -52,18 +53,26 @@ async function runAgent(commandString) {
       if (commands[cmd]) {
         const commandFn = commands[cmd];
         // Some commands have a different signature or require additional context
-        if (['close'].includes(cmd)) {
-          // 'close' needs sessionData and SESSION_FILE
-          result = await commandFn(page, args, { sessionData, SESSION_FILE });
-        } else if (['evaluate', 'route', 'custom'].includes(cmd)) {
-          // 'evaluate', 'route', 'custom' need the full command string
-          result = await commandFn(page, args, context, command);
-        } else if (['setOffline', 'cookies'].includes(cmd)) {
-          // 'setOffline', 'cookies' need the context object
-          result = await commandFn(page, args, context);
-        } else {
-          // Default for most commands
-          result = await commandFn(page, args);
+        if (['close'].includes(cmd)) { // 'close' needs sessionData and SESSION_FILE
+            result = await commandFn(page, args, { sessionData, SESSION_FILE });
+        } else if (['evaluate', 'route', 'custom'].includes(cmd)) { // 'evaluate', 'route', 'custom' need the full command string
+            result = await commandFn(page, args, currentContext, command);
+        } else if (['setOffline', 'cookies', 'saveState'].includes(cmd)) { // 'setOffline', 'cookies', 'saveState' need the context object
+            result = await commandFn(page, args, currentContext);
+        } else if (['restoreState'].includes(cmd)) { // 'restoreState' needs browser to create new context
+            result = await commandFn(page, args, currentContext, browser);
+            if (result.status === 'success') {
+              page = result.__newPage;
+              currentContext = result.__newContext;
+              page.on('pageerror', (exception) => {
+                pageErrors.push(exception.message);
+              });
+              delete result.__newPage;
+              delete result.__newContext;
+            }
+        }
+        else { // Default for most commands
+            result = await commandFn(page, args);
         }
       } else {
         result = { status: 'error', message: `Unknown command: ${cmd}` };

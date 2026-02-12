@@ -1,4 +1,7 @@
 async function waitElement(page, args) {
+  if (!args[0]) {
+    return { status: 'error', action: 'waitElement', message: 'Usage: waitElement <selector>' };
+  }
   const elementSelector = args.join(' ');
   try {
     await page.waitForSelector(elementSelector, {

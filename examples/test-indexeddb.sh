@@ -58,10 +58,9 @@ if ! AGENT_OUTPUT=$(node "$BROWSER_AGENT_DIR/web-pilot.js" "$COMMAND"); then
     echo "Error screenshot saved as agent_error.png"
 
     echo "Agent Output: $AGENT_OUTPUT"
+    echo "⚠️  IndexedDB Test Execution Completed (may have warnings which is expected)."
 
     exit 1
-    echo "⚠️  IndexedDB Test Execution Completed (may have warnings which is expected)."
-    echo "Agent Output: $AGENT_OUTPUT"
 else
     echo "Agent Output: $AGENT_OUTPUT"
 fi

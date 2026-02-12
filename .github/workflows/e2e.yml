@@ -27,7 +27,13 @@ jobs:
 
     - name: Run E2E Reference Test
       run: bash examples/test-reference.sh
-    
+
+    - name: Run State Management Test
+      run: bash examples/test-state.sh
+
+    - name: Run Batch Test
+      run: bash examples/test-batch.sh
+
     - name: Upload Error Artifacts
       if: failure()
       uses: actions/upload-artifact@v4

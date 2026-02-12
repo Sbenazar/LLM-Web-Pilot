@@ -61,51 +61,68 @@ async function screenshot(page, args) {
       };
     }
 
-    const pathLower = outputPath.toLowerCase();
-    let format = undefined;
-    if (pathLower.endsWith('.png')) {
-      format = 'png';
-    } else if (pathLower.endsWith('.jpeg') || pathLower.endsWith('.jpg')) {
-      format = 'jpeg';
-    } else if (pathLower.endsWith('.webp')) {
-      format = 'webp';
+    try {
+      const pathLower = outputPath.toLowerCase();
+      let format = undefined;
+      if (pathLower.endsWith('.png')) {
+        format = 'png';
+      } else if (pathLower.endsWith('.jpeg') || pathLower.endsWith('.jpg')) {
+        format = 'jpeg';
+      } else if (pathLower.endsWith('.webp')) {
+        format = 'webp';
+      }
+
+      await page.screenshot({
+        path: outputPath,
+        fullPage: true,
+        ...(format ? { type: format } : {}),
+      });
+
+      return {
+        status: 'success',
+        action: 'screenshot',
+        operation: 'fullpage',
+        path: outputPath,
+      };
+    } catch (error) {
+      return {
+        status: 'error',
+        action: 'screenshot',
+        operation: 'fullpage',
+        message: error.message,
+      };
     }
-
-    await page.screenshot({
-      path: outputPath,
-      fullPage: true,
-      ...(format ? { type: format } : {}),
-    });
-
-    return {
-      status: 'success',
-      action: 'screenshot',
-      operation: 'fullpage',
-      path: outputPath,
-    };
   } else {
     const outputPath = args[0] || 'screenshot.png';
 
-    const pathLower = outputPath.toLowerCase();
-    let format = undefined;
-    if (pathLower.endsWith('.png')) {
-      format = 'png';
-    } else if (pathLower.endsWith('.jpeg') || pathLower.endsWith('.jpg')) {
-      format = 'jpeg';
-    } else if (pathLower.endsWith('.webp')) {
-      format = 'webp';
+    try {
+      const pathLower = outputPath.toLowerCase();
+      let format = undefined;
+      if (pathLower.endsWith('.png')) {
+        format = 'png';
+      } else if (pathLower.endsWith('.jpeg') || pathLower.endsWith('.jpg')) {
+        format = 'jpeg';
+      } else if (pathLower.endsWith('.webp')) {
+        format = 'webp';
+      }
+
+      await page.screenshot({
+        path: outputPath,
+        ...(format ? { type: format } : {}),
+      });
+
+      return {
+        status: 'success',
+        action: 'screenshot',
+        path: outputPath,
+      };
+    } catch (error) {
+      return {
+        status: 'error',
+        action: 'screenshot',
+        message: error.message,
+      };
     }
-
-    await page.screenshot({
-      path: outputPath,
-      ...(format ? { type: format } : {}),
-    });
-
-    return {
-      status: 'success',
-      action: 'screenshot',
-      path: outputPath,
-    };
   }
 }
 

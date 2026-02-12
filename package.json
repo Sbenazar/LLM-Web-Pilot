@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A CLI-based browser automation agent designed for seamless LLM and human collaboration in the browser.",
   "main": "web-pilot.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node init_browser.js",
     "test": "bash examples/test-reference.sh"
