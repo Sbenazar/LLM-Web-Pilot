@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2026-02-12
 
 ### Added
+
 - **saveState** command — saves browser state (cookies, localStorage, URL) to `states/<name>.json`.
 - **restoreState** command — restores browser state from a saved file, creating a new browser context.
 - **Batch Test Runner** (`batch-runner.js`) — runs multiple tests from a JSON file with shared `setup`/`teardown`, partial-match `expect`, and a summary JSON report.

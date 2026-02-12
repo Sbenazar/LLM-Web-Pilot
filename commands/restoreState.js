@@ -6,12 +6,20 @@ const STATES_DIR = path.join(__dirname, '..', 'states');
 async function restoreState(page, args, context, browser) {
   const name = args[0];
   if (!name) {
-    return { status: 'error', action: 'restoreState', message: 'State name is required. Usage: restoreState <name>' };
+    return {
+      status: 'error',
+      action: 'restoreState',
+      message: 'State name is required. Usage: restoreState <name>',
+    };
   }
 
   const filePath = path.join(STATES_DIR, `${name}.json`);
   if (!fs.existsSync(filePath)) {
-    return { status: 'error', action: 'restoreState', message: `State file not found: ${filePath}` };
+    return {
+      status: 'error',
+      action: 'restoreState',
+      message: `State file not found: ${filePath}`,
+    };
   }
 
   const stateData = JSON.parse(fs.readFileSync(filePath, 'utf8'));

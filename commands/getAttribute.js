@@ -1,6 +1,10 @@
 async function getAttribute(page, args) {
   if (!args[0] || !args[1]) {
-    return { status: 'error', action: 'getAttribute', message: 'Usage: getAttribute <selector> <attribute>' };
+    return {
+      status: 'error',
+      action: 'getAttribute',
+      message: 'Usage: getAttribute <selector> <attribute>',
+    };
   }
   try {
     const attrVal = await page.getAttribute(args[0], args[1]);

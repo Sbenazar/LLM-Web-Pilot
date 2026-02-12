@@ -104,6 +104,7 @@ The agent accepts a chain of commands separated by `;`. It returns an array of r
 - **waitServiceWorker** – Wait for Service Worker activation.
 
 ### State Management
+
 - **saveState** `name` – Saves browser state (cookies, localStorage, URL) to `states/<name>.json`.
 - **restoreState** `name` – Restores browser state from `states/<name>.json` (creates a new context, navigates to saved URL).
 
@@ -149,33 +150,47 @@ For running multiple tests from a JSON file with shared setup/teardown:
 
 ```bash
 node batch-runner.js tests/my-tests.json
+node batch-runner.js tests/my-tests.json --tag=smoke
+node batch-runner.js tests/my-tests.json --var=BASE_URL=http://localhost:3000 --format=pretty
 ```
+
+### CLI Options
+
+- `--tag=TAG` – Run only tests that have the specified tag in their `tags` array.
+- `--var=KEY=VALUE` – Replace `$KEY` in setup/teardown/commands with VALUE. Can be repeated.
+- `--format=json|pretty` – Output format. `json` (default) for machine parsing, `pretty` for colored terminal output.
 
 ### Test File Format
 
 ```json
 {
-  "setup": "restoreState authenticated",
+  "setup": "goto $BASE_URL/app",
   "teardown": "goto about:blank",
   "tests": [
     {
       "name": "my-test-case",
-      "commands": "goto /page; click #btn; text #result",
+      "tags": ["smoke", "auth"],
+      "commands": "click #btn; text #result",
       "expect": {
-        "results": [
-          { "status": "success" },
-          { "status": "success" },
-          { "status": "success", "data": "Expected text" }
-        ]
+        "results": [{ "status": "success" }, { "status": "success", "data": "Expected text" }]
       }
     }
   ]
 }
 ```
 
-- **setup** – Command chain executed before each test (optional).
-- **teardown** – Command chain executed after each test (optional).
+- **setup** – Command chain executed before each test (optional). Supports `$VAR` substitution.
+- **teardown** – Command chain executed after each test (optional). Supports `$VAR` substitution.
+- **tags** – Array of string tags for filtering with `--tag` (optional).
 - **expect** – Partial match: only the specified fields are compared. Omitted fields are ignored.
+
+### Match Operators
+
+The `expect` block supports special operators for flexible matching:
+
+- **Exact match** (default): `"data": "hello"` — value must equal `"hello"` exactly.
+- **`$contains`**: `"data": { "$contains": "SUCCESS" }` — string must include the substring.
+- **`$regex`**: `"data": { "$regex": "v\\d+\\.\\d+", "$flags": "i" }` — string must match the regex. Optional `$flags` for regex flags.
 
 ### Report Format
 

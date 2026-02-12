@@ -26,7 +26,8 @@ async function sessionStorageCmd(page, args) {
         return {
           status: 'error',
           action: 'sessionStorage',
-          message: 'Usage: sessionStorage <key> | sessionStorage set <key> <value> | sessionStorage clear',
+          message:
+            'Usage: sessionStorage <key> | sessionStorage set <key> <value> | sessionStorage clear',
         };
       }
       const ssValue = await page.evaluate((key) => sessionStorage.getItem(key), args[0]);

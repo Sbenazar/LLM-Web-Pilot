@@ -6,7 +6,11 @@ const STATES_DIR = path.join(__dirname, '..', 'states');
 async function saveState(page, args, context) {
   const name = args[0];
   if (!name) {
-    return { status: 'error', action: 'saveState', message: 'State name is required. Usage: saveState <name>' };
+    return {
+      status: 'error',
+      action: 'saveState',
+      message: 'State name is required. Usage: saveState <name>',
+    };
   }
 
   if (!fs.existsSync(STATES_DIR)) {

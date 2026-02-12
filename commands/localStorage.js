@@ -21,7 +21,8 @@ async function localStorageCmd(page, args) {
         return {
           status: 'error',
           action: 'localStorage',
-          message: 'Usage: localStorage <key> | localStorage set <key> <value> | localStorage clear',
+          message:
+            'Usage: localStorage <key> | localStorage set <key> <value> | localStorage clear',
         };
       }
       const lsValue = await page.evaluate((key) => localStorage.getItem(key), args[0]);

@@ -44,6 +44,7 @@ bash examples/test-worker.sh
 All 29 commands live in `commands/` as individual modules exporting an async function. They are registered in `commands/index.js`. The command name in the CLI maps directly to the export key in that registry.
 
 **Command function signatures vary** depending on what context the command needs — this is dispatched in `web-pilot.js`:
+
 - Default: `(page, args)`
 - Context-aware (`setOffline`, `cookies`, `saveState`): `(page, args, context)`
 - Full command string (`evaluate`, `route`, `custom`): `(page, args, context, command)`
@@ -58,7 +59,9 @@ Every command returns `{ status: 'success'|'error', action: '...', ...data }`. T
 
 ### Batch test runner
 
-`batch-runner.js` is a separate entry point that runs tests from a JSON file. Each test specifies a command chain and an optional `expect` block for partial matching. Shared `setup`/`teardown` command chains run before/after each test. Output is a JSON report with `total`/`passed`/`failed` counts. See `examples/batch-example.json`.
+`batch-runner.js` is a separate entry point that runs tests from a JSON file. Each test specifies a command chain and an optional `expect` block for partial matching. Shared `setup`/`teardown` command chains run before/after each test. Output is a JSON report with `total`/`passed`/`failed` counts.
+
+CLI options: `--tag=TAG` (filter by tag), `--var=KEY=VALUE` (variable substitution in commands), `--format=json|pretty`. Expect blocks support `$contains` and `$regex` operators for flexible matching. See `examples/batch-example.json`.
 
 ### State management
 
@@ -71,6 +74,7 @@ Command chains stop on first error (`web-pilot.js:69`). On crash, diagnostics ar
 ## Testing
 
 Tests are bash scripts in `examples/` — not a JS test framework. Each script:
+
 1. Starts a headless browser server
 2. Runs command chains against `test_page.html`
 3. Validates JSON output with `grep`
