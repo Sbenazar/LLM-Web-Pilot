@@ -33,7 +33,7 @@ echo "✅ LLM-Web-Pilot started (PID: $AGENT_PID)"
 cleanup() {
     echo "🧹 Cleaning up processes..."
     node "$BROWSER_AGENT_DIR/web-pilot.js" "close" || true
-    if ps -p $AGENT_PID > /dev/null; then kill $AGENT_PID; fi
+    kill $AGENT_PID 2>/dev/null || true
     rm -f "$SESSION_FILE" "agent_error.png"
 }
 trap cleanup EXIT
